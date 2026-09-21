@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Nexora | Real Estate Sales & Targeting Challenge</title>
+<meta name="description" content="A 7-question real estate sales and targeting challenge by Nexora.">
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Inter,Arial,sans-serif;background:#090909;color:#f5f5f5;min-height:100vh}
+.wrap{max-width:820px;margin:auto;padding:28px 18px 50px}.brand{letter-spacing:4px;font-size:12px;color:#d7ad55;text-align:center;text-transform:uppercase}
+.card{margin-top:18px;border:1px solid #292929;border-radius:24px;background:linear-gradient(145deg,#111,#090909);padding:30px;box-shadow:0 18px 60px #0008}
+h1{text-align:center;font-size:clamp(30px,7vw,54px);margin:8px 0 10px;line-height:1.05}
+.sub{text-align:center;color:#aaa;line-height:1.6}.gold{color:#e0b75f}
+.progress{height:7px;background:#222;border-radius:20px;margin:25px 0 8px;overflow:hidden}.bar{height:100%;width:0;background:#d9ad51;transition:.3s}
+.meta{font-size:13px;color:#888}.question{font-size:21px;line-height:1.45;font-weight:700;margin:22px 0}
+.option{display:block;width:100%;text-align:left;margin:10px 0;padding:16px;border-radius:14px;border:1px solid #333;background:#151515;color:#fff;font-size:15px;cursor:pointer}
+.option:hover{border-color:#d9ad51}.option.correct{border-color:#d9ad51;background:#211b10}.option.wrong{opacity:.6}
+.feedback{min-height:48px;color:#aaa;line-height:1.5;margin:14px 0}.btn{border:0;border-radius:12px;padding:13px 18px;background:#d9ad51;color:#111;font-weight:800;cursor:pointer;margin:5px}
+.btn:disabled{opacity:.4;cursor:not-allowed}.center{text-align:center}.score{font-size:64px;font-weight:900;color:#d9ad51}.result-title{font-size:27px;font-weight:800}
+.footer{border-top:1px solid #292929;margin-top:28px;padding-top:20px;color:#999;font-size:13px;line-height:1.8;text-align:center}.footer a{color:#d9ad51}
+.sharebox{margin-top:20px;padding:16px;border:1px solid #292929;border-radius:14px;background:#101010}.small{font-size:12px;color:#777}
+</style>
+</head>
+<body>
+<main class="wrap">
+<div class="brand">NEXORA • TURN ATTENTION INTO GROWTH</div>
+<section class="card" id="app"></section>
+</main>
+<script>
+const questions=[
+["A buyer says: “I need a 2BHK under ₹70 lakh.” What should you do FIRST?",
+["Send every 2BHK listing you have","Ask about location, budget flexibility, timeline and purpose","Immediately pitch the most expensive option","Ask them to visit the office"],1,
+"Good qualification starts with understanding the buyer before pitching inventory."],
+["You are marketing a ₹1.2 crore property. Who is the most relevant first audience?",
+["Everyone aged 18+","People showing relevant high-value property or investment intent","Only your existing friends","Random local WhatsApp groups"],1,
+"Targeting should match the property's price, buyer profile and intent."],
+["A hot lead stops replying after asking for the price. What is the smarter follow-up?",
+["Send “???” repeatedly","Call 10 times in one hour","Share useful information and offer a simple next step","Delete the lead"],2,
+"Value-led follow-up gives the prospect a reason to continue the conversation."],
+["A buyer says: “Your competitor is offering it cheaper.” Your best response is:",
+["“They are lying.”","“Then buy from them.”","Ask what they are comparing and explain the differences","Immediately reduce your price"],2,
+"First understand the comparison: location, specifications, payment terms, possession and value."],
+["Which lead is usually the strongest sales opportunity?",
+["Someone who only likes a post","Someone asking about price, location and site visit","Someone who follows 100 property pages","Someone who says “maybe someday”"],1,
+"Specific buying questions and willingness to take a next step indicate stronger intent."],
+["Your Meta ad gets many leads but very few site visits. What should you inspect first?",
+["Only the logo","Lead quality, targeting, offer and qualification process","Increase the budget immediately","Post more random content"],1,
+"Lead volume alone is not the goal. Check whether the campaign is attracting and qualifying the right audience."],
+["A prospect is ready to visit the property. What should your next message do?",
+["Send a long paragraph","Confirm date, time, location and expectations clearly","Wait for them to remember","Send unrelated properties"],1,
+"A clear appointment confirmation reduces friction and helps move the lead to the next step."]
+];
+let i=0,score=0,answered=false;
+const app=document.getElementById("app");
+function render(){
+ answered=false;
+ const q=questions[i];
+ app.innerHTML=`<div class="brand">REAL ESTATE SALES CHALLENGE</div>
+ <h1>🎯 Can You <span class="gold">Sell Smart?</span></h1>
+ <p class="sub">Test your targeting, qualification, follow-up, objection handling and conversion instincts.</p>
+ <div class="progress"><div class="bar" style="width:${i/questions.length*100}%"></div></div>
+ <div class="meta">Question ${i+1} of ${questions.length}</div>
+ <div class="question">${q[0]}</div>
+ <div id="options">${q[1].map((x,n)=>`<button class="option" data-n="${n}">${String.fromCharCode(65+n)}. ${x}</button>`).join("")}</div>
+ <div class="feedback" id="feedback"></div>
+ <button class="btn" id="next" disabled>${i===questions.length-1?"See My Score":"Next Question"} →</button>`;
+ document.querySelectorAll(".option").forEach(btn=>btn.onclick=()=>{
+   if(answered)return; answered=true;
+   const n=Number(btn.dataset.n);
+   if(n===q[2]){score++;btn.classList.add("correct");document.getElementById("feedback").textContent="✓ Correct — "+q[3]}
+   else{btn.classList.add("wrong");document.querySelectorAll(".option")[q[2]].classList.add("correct");document.getElementById("feedback").textContent="Not quite — "+q[3]}
+   document.querySelectorAll(".option").forEach(x=>x.disabled=true);
+   document.getElementById("next").disabled=false;
+ });
+ document.getElementById("next").onclick=()=>{if(i<questions.length-1){i++;render()}else{result()}};
+}
+function result(){
+ const pct=Math.round(score/questions.length*100);
+ let label=pct>=86?"Sales Strategist":pct>=71?"Smart Closer":pct>=50?"Promising Agent":"Time to Sharpen Your Sales Game";
+ const text=`I scored ${score}/${questions.length} (${pct}%) in the Nexora Real Estate Sales & Targeting Challenge 🎯`;
+ app.innerHTML=`<div class="center"><div class="brand">YOUR RESULT</div>
+ <div class="score">${score}/${questions.length}</div><div class="result-title">${label}</div>
+ <p class="sub">${pct}% Sales Readiness</p>
+ <div class="sharebox"><strong>Challenge your network 👇</strong><p class="small">${text}</p>
+ <button class="btn" id="share">Share My Score</button><button class="btn" id="again">↻ Play Again</button></div>
+ <p class="small">This is a mini engagement challenge, not a professional performance assessment.</p></div>
+ <div class="footer"><strong>Nexora</strong> — Turn Attention Into Growth.<br>
+ Founder: Nazmia Nazli · WhatsApp: +91 8617765848<br>
+ <a href="https://www.linkedin.com/in/nazmia-undefined-253503431" target="_blank" rel="noopener">LinkedIn</a></div>`;
+ document.getElementById("again").onclick=()=>{i=0;score=0;render()};
+ document.getElementById("share").onclick=async()=>{
+   const data={title:"Nexora Real Estate Sales Challenge",text:text+" Can you beat my score? 🎯",url:location.href};
+   if(navigator.share){try{await navigator.share(data)}catch(e){}}
+   else{alert("Copy this page URL and share it on LinkedIn with your score: "+location.href)}
+ };
+}
+render();
+</script>
+</body>
+</html>
